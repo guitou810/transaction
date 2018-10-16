@@ -63,8 +63,24 @@ public class BankingTest {
 		assertEquals("Balance incorrecte !", before0 - amount, myDAO.balanceForCustomer(fromCustomer), 0.001f);
 		assertEquals("Balance incorrecte !", before1 + amount, myDAO.balanceForCustomer(toCustomer), 0.001f);				
 	}
-	
+        
+        @Test(expected = SQLException.class)
+	public void Montantplusgrandquelesolde() throws Exception {
+                float amount = 200.5f;
+		int fromCustomer = 0; // Le client 0 dispose de 100€ dans le jeu de tests
+		int toCustomer = 1;
+                myDAO.bankTransferTransaction(fromCustomer, toCustomer, amount);
 
+        }       
+        
+        @Test(expected = IllegalArgumentException.class)
+	public void CompteExistePas() throws Exception {
+                float amount = 10.5f;
+		int fromCustomer = 2; // Le client 0 dispose de 100€ dans le jeu de tests
+		int toCustomer = 1;
+                myDAO.bankTransferTransaction(fromCustomer, toCustomer, amount);
+                
+        }
 	public static DataSource getDataSource() throws SQLException {
 		org.hsqldb.jdbc.JDBCDataSource ds = new org.hsqldb.jdbc.JDBCDataSource();
 		ds.setDatabase("jdbc:hsqldb:mem:testcase;shutdown=true");
